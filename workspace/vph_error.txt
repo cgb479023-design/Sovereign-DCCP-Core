@@ -1,0 +1,12 @@
+TimeoutError: page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.youtube.com/feed/trending", waiting until "networkidle"[22m
+
+page.goto: Timeout 30000ms exceeded.
+Call log:
+[2m  - navigating to "https://www.youtube.com/feed/trending", waiting until "networkidle"[22m
+
+    at G:\Sovereign-DCCP-Core\workspace\vph_radar_core.js:65:47
+    at step (G:\Sovereign-DCCP-Core\workspace\vph_radar_core.js:33:23)
+    at Object.next (G:\Sovereign-DCCP-Core\workspace\vph_radar_core.js:14:53)
+    at fulfilled (G:\Sovereign-DCCP-Core\workspace\vph_radar_core.js:5:58)

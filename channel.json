@@ -1,0 +1,23 @@
+[
+  {
+    "id": "CYBER_PUNK_TECH",
+    "name": "赛博科技前瞻",
+    "niche": "Cyberpunk technology and AI future",
+    "uploadFrequencyHours": 12,
+    "status": "active"
+  },
+  {
+    "id": "ZEN_MEDITATION",
+    "name": "深海冥想",
+    "niche": "Deep sea relaxation and mindfulness",
+    "uploadFrequencyHours": 24,
+    "status": "active"
+  },
+  {
+    "id": "DARK_HUMOR_AI",
+    "name": "硅基幽默",
+    "niche": "Dark AI humor and digital memes",
+    "uploadFrequencyHours": 8,
+    "status": "active"
+  }
+]

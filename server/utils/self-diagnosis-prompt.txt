@@ -1,0 +1,12 @@
+# INTERNAL DIAGNOSIS PROTOCOL
+你刚才执行 [TASK_NAME] 失败了。报错信息如下：
+[ERROR_MESSAGE]
+
+## 诊断要求：
+1. 分析错误：是页面 DOM 漂移（ID/Class 改变）、网络超时、还是逻辑死锁？
+2. 搜索代码：找到负责该动作的文件（如 askStudioAgent.ts）。
+3. 生成补丁：不要给出建议，直接给出可以覆盖原文件的代码片段或修改后的 JSON 选择器。
+4. 目标：让下次执行 100% 成功。
+
+# OUTPUT FORMAT:
+JSON_PATCH: { "file": "path/to/file", "new_logic": "..." }

@@ -1,0 +1,60 @@
+# DCCP 主权核心配置文件
+# Generated: 2026-02-23
+
+server:
+  port: 51124
+  env: development
+  corsOrigins:
+    - http://localhost:3000
+    - http://localhost:5173
+
+log:
+  level: info
+  filePath: ./logs/dccp.log
+  maxFiles: 7
+
+router:
+  enableAudit: true
+  enableAutoSwitch: true
+  maxRetries: 3
+  timeoutMs: 30000
+
+# API Keys 配置 (请替换为真实密钥)
+adapters:
+  openai:
+    apiKey: ${OPENAI_API_KEY}
+    baseURL: https://api.openai.com/v1
+    defaultModel: gpt-4o
+  
+  anthropic:
+    apiKey: ${ANTHROPIC_API_KEY}
+    defaultModel: claude-sonnet-4-20250514
+  
+  google:
+    apiKey: ${GOOGLE_API_KEY}
+    defaultModel: gemini-2.0-flash-exp
+
+bridge:
+  rootDir: ./
+  enableBackup: true
+  backupDir: .dccp/backups
+  backupMaxAge: 7
+
+nodes:
+  registry:
+    - id: gemini-node
+      provider: GOOGLE
+      tier: v2.0
+      type: API
+    - id: claude-node
+      provider: ANTHROPIC
+      tier: v2.0
+      type: API
+    - id: gpt-node
+      provider: OPENAI
+      tier: v1.5
+      type: API
+    - id: arena-node
+      provider: ARENA
+      tier: vNext
+      type: WEB_GHOST
