@@ -60,21 +60,23 @@ export default function ControlColumn({ sovereigntyRatio = 88.42, activeCount = 
         <div className="flex flex-col h-full space-y-3 w-full font-sans">
 
             {/* A. Sovereignty Ratio (顶部渐变仪表 - V5 High Fidelity) */}
-            <div className="bg-slate-900/80 p-4 rounded-lg border border-slate-800 relative overflow-hidden glass-volumetric">
-                <div className="flex justify-between items-end text-[10px] text-slate-400 mb-2 font-cyber tracking-widest uppercase">
-                    <span className="flex items-center gap-2">
-                        <Shield size={12} className="text-cyan-400" /> SVRG_RATIO
-                    </span>
-                    <span className="text-white font-black text-xs font-mono">{sovereigntyRatio}%</span>
+            <div className="bg-slate-900/80 p-3 rounded-lg border border-slate-800 relative overflow-hidden glass-volumetric">
+                <div className="flex flex-col gap-1 mb-2">
+                    <div className="flex justify-between items-center text-[9px] text-slate-500 font-cyber tracking-widest uppercase">
+                        <span className="flex items-center gap-2">
+                            <Shield size={10} className="text-cyan-400" /> SVRG_RATIO
+                        </span>
+                        <span className="text-white font-black text-[11px] font-mono">{sovereigntyRatio}%</span>
+                    </div>
                 </div>
                 {/* 渐变进度条 (Gradient Bar with Inner Glow) */}
-                <div className="h-2.5 w-full bg-slate-950/80 rounded-full overflow-hidden flex border border-white/5 relative shadow-inner">
+                <div className="h-2 w-full bg-slate-950/80 rounded-full overflow-hidden flex border border-white/5 relative shadow-inner">
                     <div className="h-full w-[65%] bg-gradient-to-r from-blue-600 to-cyan-400 shadow-[0_0_15px_rgba(6,182,212,0.4)] relative z-10" />
                     <div className="h-full w-[23.42%] bg-gradient-to-r from-purple-700 to-magenta-500 shadow-[0_0_15px_rgba(168,85,247,0.4)]" />
                 </div>
-                <div className="flex justify-between text-[9px] mt-2 font-mono tracking-tighter">
-                    <span className="text-cyan-500 font-bold opacity-80">[LOCAL: 65%]</span>
-                    <span className="text-purple-500 font-bold opacity-80">[CLOUD: 23.42%]</span>
+                <div className="flex justify-between text-[8px] mt-2 font-mono tracking-tighter opacity-70">
+                    <span className="text-cyan-500 font-bold">[LOCAL: 65%]</span>
+                    <span className="text-purple-500 font-bold">[CLOUD: 23%]</span>
                 </div>
             </div>
 

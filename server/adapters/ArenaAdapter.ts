@@ -4,6 +4,7 @@
 
 import { BaseAdapter, AdapterResponse } from './BaseAdapter';
 import { DCCPPacket } from '../core/compiler';
+import { WebGhostEngine } from '../services/WebGhostEngine';
 
 export interface ArenaModel {
   id: string;
@@ -128,8 +129,20 @@ ${packet.id}
     });
   }
 
-  public async execute(prompt: string): Promise<any> {
+  public async execute(prompt: string, packet?: any): Promise<any> {
     console.log(`[${this.agentId}] 🥊 Arena 竞技场开启，正在执行多模型对抗分析...`);
+
+    // --- Web Ghost Engine 物理级爬虫注入 ---
+    if (packet && packet._useGhost) {
+      try {
+        console.log(`[${this.agentId}] 👻 侦测到 WEB_GHOST 节点要求，唤醒网页幽灵...`);
+        const ghost = WebGhostEngine.getInstance();
+        return await ghost.sendPrompt(packet._ghostTarget || 'arena', prompt);
+      } catch (err: any) {
+        console.error(`[${this.agentId}] 👻 Web Ghost 执行失败，降级本地沙盒模拟: ${err.message}`);
+        // 失败则降级，继续往下执行原有的本地打桩返回
+      }
+    }
 
     // 模拟模型生成延迟
     await new Promise(resolve => setTimeout(resolve, 800));

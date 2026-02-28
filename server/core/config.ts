@@ -10,20 +10,20 @@ export interface DCCPConfig {
     env: 'development' | 'production';
     corsOrigins: string[];
   };
-  
+
   log: {
     level: 'error' | 'warn' | 'info' | 'debug';
     filePath: string;
     maxFiles: number;
   };
-  
+
   router: {
     enableAudit: boolean;
     enableAutoSwitch: boolean;
     maxRetries: number;
     timeoutMs: number;
   };
-  
+
   adapters: {
     openai?: {
       apiKey: string;
@@ -39,7 +39,7 @@ export interface DCCPConfig {
       defaultModel?: string;
     };
   };
-  
+
   nodes: {
     registry: Array<{
       id: string;
@@ -49,7 +49,7 @@ export interface DCCPConfig {
       endpoint?: string;
     }>;
   };
-  
+
   bridge: {
     rootDir: string;
     allowedExtensions: string[];
@@ -65,31 +65,39 @@ const defaultConfig: DCCPConfig = {
     env: 'development',
     corsOrigins: ['http://localhost:3000', 'http://localhost:5173']
   },
-  
+
   log: {
     level: 'info',
     filePath: './logs/dccp.log',
     maxFiles: 7
   },
-  
+
   router: {
     enableAudit: true,
     enableAutoSwitch: true,
     maxRetries: 3,
     timeoutMs: 30000
   },
-  
+
   adapters: {},
-  
+
   nodes: {
     registry: [
       { id: 'gemini-node', provider: 'GOOGLE', tier: 'v2.0', type: 'API' },
       { id: 'claude-node', provider: 'ANTHROPIC', tier: 'v2.0', type: 'API' },
       { id: 'gpt-node', provider: 'OPENAI', tier: 'v1.5', type: 'API' },
-      { id: 'arena-node', provider: 'ARENA', tier: 'vNext', type: 'WEB_GHOST' }
+      { id: 'arena-node', provider: 'ARENA', tier: 'vNext', type: 'WEB_GHOST' },
+      { id: 'ollama-local', provider: 'OLLAMA', tier: 'local', type: 'INFERENCE' },
+      { id: 'kimi-web', provider: 'MOONSHOT', tier: 'v1.0', type: 'WEB_GHOST' },
+      { id: 'claude-web', provider: 'ANTHROPIC', tier: 'v2.0', type: 'WEB_GHOST' },
+      { id: 'grok-web', provider: 'XAI', tier: 'v1.5', type: 'WEB_GHOST' },
+      { id: 'deepseek-node', provider: 'DEEPSEEK', tier: 'v2.5', type: 'API' },
+      { id: 'qwen-node', provider: 'ALIBABA', tier: 'vMax', type: 'API' },
+      { id: 'llama-node', provider: 'META', tier: 'v3.1', type: 'INFERENCE' },
+      { id: 'mistral-node', provider: 'MISTRAL', tier: 'v0.3', type: 'API' }
     ]
   },
-  
+
   bridge: {
     rootDir: './',
     allowedExtensions: ['.ts', '.js', '.json', '.md', '.txt', '.yaml', '.yml', '.css', '.html', '.tsx', '.jsx'],
@@ -106,15 +114,15 @@ let config: DCCPConfig = { ...defaultConfig };
  */
 export function loadConfig(configPath?: string): DCCPConfig {
   const filePath = configPath || process.env.DCCP_CONFIG_PATH || './dccp-config.yaml';
-  
+
   try {
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // 简单 YAML 解析
       const loaded = parseYaml(content);
       config = mergeDeep(defaultConfig, loaded);
-      
+
       console.log(`[Config] 配置文件加载成功: ${filePath}`);
     } else {
       // 尝试从环境变量加载
@@ -125,7 +133,7 @@ export function loadConfig(configPath?: string): DCCPConfig {
     console.warn(`[Config] 配置加载失败，使用默认: ${error.message}`);
     config = loadFromEnv(defaultConfig);
   }
-  
+
   return config;
 }
 
@@ -142,14 +150,14 @@ export function getConfig(): DCCPConfig {
 function parseYaml(content: string): Partial<DCCPConfig> {
   const result: any = {};
   const lines = content.split('\n');
-  
+
   let currentSection: any = null;
   let currentArray: any = null;
-  
+
   for (const line of lines) {
     const trimmed = line.trim();
     if (!trimmed || trimmed.startsWith('#')) continue;
-    
+
     // 节标题
     if (trimmed.endsWith(':') && !trimmed.includes(' ')) {
       const key = trimmed.slice(0, -1);
@@ -157,7 +165,7 @@ function parseYaml(content: string): Partial<DCCPConfig> {
       result[key] = currentSection;
       continue;
     }
-    
+
     // 数组项
     if (trimmed.startsWith('- ')) {
       if (!currentArray) {
@@ -175,20 +183,20 @@ function parseYaml(content: string): Partial<DCCPConfig> {
       }
       continue;
     }
-    
+
     // 键值对
     const colonIndex = trimmed.indexOf(':');
     if (colonIndex > 0) {
       const key = trimmed.slice(0, colonIndex).trim();
       let value: any = trimmed.slice(colonIndex + 1).trim();
-      
+
       if (value === 'true') value = true;
       else if (value === 'false') value = false;
       else if (!isNaN(Number(value))) value = Number(value);
       else if (value.startsWith('"') && value.endsWith('"')) {
         value = value.slice(1, -1);
       }
-      
+
       if (currentSection) {
         currentSection[key] = value;
       } else {
@@ -196,7 +204,7 @@ function parseYaml(content: string): Partial<DCCPConfig> {
       }
     }
   }
-  
+
   return result;
 }
 
@@ -205,7 +213,7 @@ function parseYaml(content: string): Partial<DCCPConfig> {
  */
 function mergeDeep(target: any, source: any): any {
   const output = { ...target };
-  
+
   for (const key in source) {
     if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
       output[key] = mergeDeep(target[key] || {}, source[key]);
@@ -213,7 +221,7 @@ function mergeDeep(target: any, source: any): any {
       output[key] = source[key];
     }
   }
-  
+
   return output;
 }
 
@@ -222,12 +230,12 @@ function mergeDeep(target: any, source: any): any {
  */
 function loadFromEnv(base: DCCPConfig): DCCPConfig {
   const config = { ...base };
-  
+
   if (process.env.DCCP_PORT) config.server.port = parseInt(process.env.DCCP_PORT);
   if (process.env.NODE_ENV) config.server.env = process.env.NODE_ENV as any;
   if (process.env.DCCP_CORS) config.server.corsOrigins = process.env.DCCP_CORS.split(',');
   if (process.env.DCCP_LOG_LEVEL) config.log.level = process.env.DCCP_LOG_LEVEL as any;
-  
+
   if (process.env.OPENAI_API_KEY) {
     config.adapters.openai = {
       apiKey: process.env.OPENAI_API_KEY,
@@ -235,21 +243,21 @@ function loadFromEnv(base: DCCPConfig): DCCPConfig {
       defaultModel: process.env.OPENAI_MODEL
     };
   }
-  
+
   if (process.env.ANTHROPIC_API_KEY) {
     config.adapters.anthropic = {
       apiKey: process.env.ANTHROPIC_API_KEY,
       defaultModel: process.env.ANTHROPIC_MODEL
     };
   }
-  
+
   if (process.env.GOOGLE_API_KEY) {
     config.adapters.google = {
       apiKey: process.env.GOOGLE_API_KEY,
       defaultModel: process.env.GOOGLE_MODEL
     };
   }
-  
+
   return config;
 }
 
@@ -296,7 +304,7 @@ bridge:
   backupDir: .dccp/backups
   backupMaxAge: 7
 `;
-  
+
   fs.writeFileSync(filePath, yaml, 'utf8');
   console.log(`[Config] 默认配置已创建: ${filePath}`);
 }

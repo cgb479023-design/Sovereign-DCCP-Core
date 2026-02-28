@@ -1,0 +1,53 @@
+/* 1. 引入字体 (必须在最顶部) */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+
+/* 2. 修复 Tailwind 指令 (v3 标准语法) */
+/* 不要用 @import "tailwindcss"; 那是错误的 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 3. 全局大气层设置 */
+body {
+  background-color: #020617;
+  /* Slate 950 */
+  color: #e2e8f0;
+  /* Slate 200 */
+  font-family: 'Orbitron', sans-serif;
+  /* 强制默认字体 */
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 4. 扫描线纹理 (增强对比度) */
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(to bottom,
+      rgba(18, 16, 16, 0) 50%,
+      rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* 4. 隐藏滚动条但保留功能 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom radial gradient for command center */
+.command-center-bg {
+  background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
+}

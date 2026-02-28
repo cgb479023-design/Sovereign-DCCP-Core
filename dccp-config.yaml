@@ -58,3 +58,35 @@ nodes:
       provider: ARENA
       tier: vNext
       type: WEB_GHOST
+    - id: ollama-local
+      provider: OLLAMA
+      tier: local
+      type: INFERENCE
+    - id: kimi-web
+      provider: MOONSHOT
+      tier: v1.0
+      type: WEB_GHOST
+    - id: claude-web
+      provider: ANTHROPIC
+      tier: v2.0
+      type: WEB_GHOST
+    - id: grok-web
+      provider: XAI
+      tier: v1.5
+      type: WEB_GHOST
+    - id: deepseek-node
+      provider: DEEPSEEK
+      tier: v2.5
+      type: API
+    - id: qwen-node
+      provider: ALIBABA
+      tier: vMax
+      type: API
+    - id: llama-node
+      provider: META
+      tier: v3.1
+      type: INFERENCE
+    - id: mistral-node
+      provider: MISTRAL
+      tier: v0.3
+      type: API
