@@ -29,9 +29,26 @@ export class WebGhostEngine {
         if (this.isInitialized) return;
         try {
             console.log('[WebGhost] 👻 唤醒幽灵浏览器引擎 (Persistent Focus)...');
+
+            // 自动侦测 G 盘存放的 Playwright 浏览引擎
+            const chromePaths = [
+                'G:\\ms-playwright\\chromium-1208\\chrome-win64\\chrome.exe',
+                'G:\\ms-playwright\\chromium-1187\\chrome-win\\chrome.exe',
+                'G:\\ms-playwright\\chromium-1155\\chrome-win64\\chrome.exe'
+            ];
+            let executablePath = undefined;
+            for (const p of chromePaths) {
+                if (fs.existsSync(p)) {
+                    executablePath = p;
+                    console.log(`[WebGhost] 🎯 已锁定 G 盘浏览器引擎: ${p}`);
+                    break;
+                }
+            }
+
             this.context = await chromium.launchPersistentContext(this.userDataDir, {
                 headless: false, // 必须 false，才能让用户初始扫码或保留可视化监控
                 viewport: { width: 1280, height: 720 },
+                executablePath: executablePath,
                 args: ['--disable-blink-features=AutomationControlled'] // 降低被检测率
             });
             this.page = await this.context.newPage();

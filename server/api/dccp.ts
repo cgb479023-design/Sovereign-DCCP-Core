@@ -347,6 +347,15 @@ export default function createDccpRoutes(neuralRouter: NeuralRouter) {
                 const modifier = isMock ? '[Mock] ' : (isWebGhost ? '[Ghost] ' : '');
                 const finalDisplay = `${modifier}${cleanMsg}`;
 
+                // --- 物理级持久化存储节点思维数据 (Intelligence Persistence) ---
+                const fs = require('fs');
+                const path = require('path');
+                const logDir = path.join(process.cwd(), 'logs');
+                if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+                const logPath = path.join(logDir, 'nexus_intel_records.md');
+                const logEntry = `### [${new Date().toISOString()}] Node: ${node.id} | Provider: ${node.provider}\n> **Result:** ${finalDisplay}\n\n`;
+                fs.appendFileSync(logPath, logEntry, 'utf8');
+
                 // 2. 利用 Socket.io 真实反哺前端
                 io.emit('agentBroadcastResponse', {
                   nodeId: node.id,
